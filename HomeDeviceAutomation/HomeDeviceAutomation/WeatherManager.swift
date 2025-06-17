@@ -42,23 +42,16 @@ class WeatherManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let fallback = CLLocation(latitude: 7.2575, longitude: 112.7521)
         fetchWeather(for: fallback)
     }
-    
-    func fetchUVIndex(for location: CLLocation) async throws -> Int {
-        let weatherService = WeatherService()
-        let weather = try await weatherService.weather(for: location)
+
+    func fetchUVIndex(from weather: Weather) -> Int {
         return weather.currentWeather.uvIndex.value
     }
-    
-    func fetchTemperature(for location: CLLocation) async throws -> Double {
-        let weatherService = WeatherService()
-        let weather = try await weatherService.weather(for: location)
-        let temperatureCelsius = weather.currentWeather.temperature.converted(to: .celsius)
-        return temperatureCelsius.value
+
+    func fetchTemperature(from weather: Weather) -> Double {
+        return weather.currentWeather.temperature.converted(to: .celsius).value
     }
-    
-    func isDaytime(for location: CLLocation) async throws -> Bool {
-        let weatherService = WeatherService()
-        let weather = try await weatherService.weather(for: location)
+
+    func isDaylight(from weather: Weather) -> Bool {
         return weather.currentWeather.isDaylight
     }
 
@@ -66,11 +59,17 @@ class WeatherManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         Task {
             do {
                 let weather = try await service.weather(for: location)
+                
+                let temperature = fetchTemperature(from: weather)
+                let condition = weather.currentWeather.condition.description
+                let isDay = isDaylight(from: weather)
+                let uv = fetchUVIndex(from: weather)
+                
                 await MainActor.run {
-                    self.temperature = String(format: "%.0fº", weather.currentWeather.temperature.value)
-                    self.condition = weather.currentWeather.condition.description
-                    self.isDaylight = weather.currentWeather.isDaylight
-                    self.UVIndex = String(format: "%0f", weather.currentWeather.uvIndex.value)
+                    self.temperature = String(format: "%.0fº", temperature)
+                    self.condition = condition
+                    self.isDaylight = isDay
+                    self.UVIndex = String(uv)
                 }
             } catch {
                 print("WeatherKit error: \(error)")
