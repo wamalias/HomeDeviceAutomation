@@ -25,21 +25,25 @@ class HomeKitManager: NSObject, ObservableObject, HMHomeManagerDelegate, HMAcces
         home = manager.homes
         
         if let firstHome = home.first {
-            selectHome(firstHome)
-            homeHubState = firstHome.homeHubState
+            selectHome(homeName: firstHome.name)
         }
     }
     
-    func selectHome(_ home: HMHome){
-        selectedHome = home
-        accessories = home.accessories
-        homeHubState = home.homeHubState
-        automation = home.triggers
-        homeTemperature = temperatures[home.uniqueIdentifier]
-        readRoomTemperature()
-        readExhaustFan()
-        setupFanAutomation(for: home)
+    func selectHome(homeName : String){
         
+        for home in self.home {
+            if (home.name == homeName){
+                selectedHome = home
+                accessories = home.accessories
+                homeHubState = home.homeHubState
+                automation = home.triggers
+                homeHubState = home.homeHubState
+            }
+        }
+//        homeTemperature = temperatures[home.uniqueIdentifier]
+//        readRoomTemperature()
+//        readExhaustFan()
+//        setupFanAutomation(for: home)
     }
     
     func readRoomTemperature() {
@@ -72,7 +76,6 @@ class HomeKitManager: NSObject, ObservableObject, HMHomeManagerDelegate, HMAcces
             }
         }
         print("No temperature sensors found")
-        
     }
     
     func readExhaustFan() {
