@@ -1,0 +1,56 @@
+# Xcode build and user files
+build/
+DerivedData/
+
+# Xcode workspace user data (user-specific UI state)
+**/xcuserdata/
+
+# Xcode project user settings
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# Xcode scheme user settings
+*.xcscmblueprint
+
+# Swift Package Manager
+.build/
+Packages/
+.swiftpm/xcode/package.xcworkspace/
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# Accio dependencies
+Dependencies/
+.accio/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Archives
+*.xcarchive
+
+# Logs
+*.log
+
+# SwiftUI previews
+*.preview-thumbnails
+
+# macOS system files
+.DS_Store
+
+# IDEs (if any)
+.idea/
+
+# Xcode workspace file (optional: ignore if you want users to keep it)
+*.xcworkspace
+
